@@ -5,13 +5,22 @@ import (
 	"net/http"
 )
 
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintf(w, "Hello, world!")
-		if err != nil {
-			fmt.Println("ERROR!", err)
-		}
-	})
+const portNumber = ":8080"
 
-	http.ListenAndServe(":8080", nil)
+// Home is the home page handler
+func Home(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Home page")
+}
+
+// About is the about page handler
+func About(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "About page")
+}
+
+func main() {
+	http.HandleFunc("/", Home)
+	http.HandleFunc("/about", About)
+
+	fmt.Println("Starting application on port", portNumber)
+	http.ListenAndServe(portNumber, nil)
 }
