@@ -3,6 +3,7 @@ package render
 import (
 	"bytes"
 	"github.com/gandra/helloworld-web-go-trevor-sawler/config"
+	"github.com/gandra/helloworld-web-go-trevor-sawler/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,8 +17,12 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
 // RenderTemplate renders templates using html/template
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 
 	if app.UseCache {
@@ -34,7 +39,8 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	}
 
 	buf := new(bytes.Buffer)
-	_ = t.Execute(buf, nil)
+	td = AddDefaultData(td)
+	_ = t.Execute(buf, td)
 
 	// render template
 	_, err := buf.WriteTo(w)
